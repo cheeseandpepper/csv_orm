@@ -1,8 +1,6 @@
 # CsvOrm
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/csv_orm`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Sometimes you get a csv file and are asked to do some basic query type stuff with it. If you're like me and hate excel, and would rather pretend that this is in a db and you're using Activerecord as your ORM, then this gem will be of use to you.
 
 ## Installation
 
@@ -22,7 +20,30 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+  my_csv = CsvOrm::Ingestor.new('path/to/csv.csv')
+  my_data = CsvOrm::Query.new(my_csv)
+```
+
+Now you can do activerecord like queries on the dataset. Currently it supports 3 methods:
+```
+#where_any({key: 'value', other_key: 'other_value'})
+#where_all({key: 'value', other_key: 'other_value'})
+#aggregate(:field1, :field2)
+
+```ruby
+  # show users who have have any admin access
+  my_data.where_any({admin: true, super_admin: true})
+
+  # show users who are admin and named 'Mike'
+  my_data.where_all({admin: true, first_name: 'Mike'})
+
+  # give me a break down of orders by their delivery status for users named 'Mike'
+  my_data.where_all({first_name: 'Mike'}).aggregate(:delivery_status)
+  #=> {delivery_status: {placed: 10, processing: 22, shipped: 43, delivered: 8}}
+```
+
+Maybe more will come...
 
 ## Development
 
