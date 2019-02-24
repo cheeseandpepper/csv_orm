@@ -26,10 +26,12 @@ Or install it yourself as:
 ```
 
 Now you can do activerecord like queries on the dataset. Currently it supports 3 methods:
-```
+
+```ruby
 #where_any({key: 'value', other_key: 'other_value'})
 #where_all({key: 'value', other_key: 'other_value'})
 #aggregate(:field1, :field2)
+```
 
 ```ruby
   # show users who have have any admin access
