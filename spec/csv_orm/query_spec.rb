@@ -37,6 +37,32 @@ describe CsvOrm::Query do
     end
   end
 
+
+  context 'ranges' do
+    context 'date range' do
+      let(:begin_date) { DateTime.parse('2018-01-01').to_time.to_i }
+      let(:end_date)   { DateTime.parse('2018-05-05').to_time.to_i }
+      let(:in_range)   { DateTime.parse('2018-03-03').to_time.to_i }
+      let(:out_range)  { DateTime.parse('2018-10-01').to_time.to_i }
+
+      it 'can query for date within range' do
+        mock_range_date = [
+          OpenStruct.new(created_at: in_range),
+          OpenStruct.new(created_at: out_range)
+        ]
+        
+        mock_query = CsvOrm::Query.new(mock_range_date)
+        expect(mock_query.where({created_at: (begin_date..end_date)}).size).to eq(1)
+      end
+    end
+  end
+
+  describe '#not' do
+    it 'returns dataset not meeting the condition' do
+      expect(subject.not({admin: true}).size).to eq(510)
+    end
+  end
+
   describe '#where_any' do
     it 'returns a dataset meeting the || condition' do
       #490 admin, 1, Emilie Bartaloni who is not an admin

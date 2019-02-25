@@ -43,13 +43,23 @@ module CsvOrm
       self.class.new(@data.select {|row| eval(expression)});
     end
 
-    def parse_value(value)
-      return value unless value.class == String && DateTime.parse(value) rescue nil
-      DateTime.parse(value) 
+    def not(attrs)
+      expression = build_expression('&&', attrs)
+      self.class.new(@data.reject {|row| eval(expression)});
+    end
+
+    def parse_range_values(range)
+      exclude = range.exclude_end?
+      first, last = DateTime.parse(range.begin), DateTime.parse(range.end) rescue nil
+  
+      if first && last
+        Range.new(first.to_time.to_i, last.to_time.to_i, exclude)
+      else
+        range
+      end
     end
 
     def build_expression_part(key, value)
-      parsed_value = parse_value(value)
       case
       when value.class == String
         "row.send(:#{key}) == '#{value}'"
@@ -58,7 +68,8 @@ module CsvOrm
       when value.class == Array
         "#{value}.include?(row.send(:#{key}))"
       when value.class == Range
-        "(#{value}).cover?(row.send(:#{key}))"
+        parsed_range_value = parse_range_values(value)
+        "(#{parsed_range_value}).cover?(row.send(:#{key}))"
       when [TrueClass, FalseClass].include?(value.class)
         "row.send(:#{key}) == '#{value.to_s}'"
       end

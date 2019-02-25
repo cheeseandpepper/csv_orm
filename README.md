@@ -50,6 +50,20 @@ Now you can do activerecord like queries on the dataset. Currently it supports 3
 
 Maybe more will come...
 
+Ok a little more...
+
+Now supporting an option. `{smart: false}` - If you pass in a false flag, it will not try to convert time fields. Converting will happen internally on ingestion. So in other words, by default, it will take a string like `'2018-01-01'` and convert it to `1514764800`.
+
+Also supporting multiple data types as queryable criteria. You can now do...
+
+```ruby
+data.where({string_field: 'foo'})               # exact match
+data.where({string_field: /\d+/})               # pattern match
+data.where({array_field: ['a', 'b']})           # is one of
+data.where({range_field: (start_day..end_day)}) # is within range, supports numbers/dates
+```
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
