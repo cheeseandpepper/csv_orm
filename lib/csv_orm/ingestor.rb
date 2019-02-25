@@ -36,6 +36,10 @@ module CsvOrm
     def infer_data_type(field)
       # currently supporting time to integer conversion
       return field.to_s unless @smart
+
+      # integers are almost certainly not meant to be time. probably will have to address this at some point.
+      return field if field.is_a?(Numeric)
+      
       date = DateTime.parse(field) rescue nil
       if date
         return date.to_time.to_i
