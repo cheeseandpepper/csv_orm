@@ -16,7 +16,7 @@ module CsvOrm
       begin_time = Time.now
       CSV.parse(file) do |row|
         unless @headers_defined
-          @headers = row.map {|header| header.gsub(' ', '_').downcase.to_sym }
+          @headers = row.map {|header| header.gsub(/[ -]/, '_').downcase.to_sym }
         end
         parsed_row = row.map {|field| infer_data_type(field) }
         @data_set << OpenStruct.new(Hash[headers.zip(parsed_row)]) if @headers_defined
@@ -24,8 +24,8 @@ module CsvOrm
         puts "Parsed row #{$.}" if @logging
       end
       end_time = Time.now
-      puts "Parsed @file.path in #{end_time - begin_time} seconds" if @logging
-      true # suppress potentially massive @data_set
+      puts "Parsed #{@file.path} in #{end_time - begin_time} seconds" if @logging
+      @data_set
     end
 
     def infer_data_type(field)
