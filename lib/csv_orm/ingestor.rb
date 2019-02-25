@@ -12,6 +12,11 @@ module CsvOrm
       @logging         = options[:logging]
     end
 
+    def self.build(path, options)
+      self_instance = new(path, options)
+      Query.new(self_instance.parse)
+    end
+
     def parse
       begin_time = Time.now
       CSV.parse(file) do |row|
