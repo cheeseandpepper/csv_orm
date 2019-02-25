@@ -24,7 +24,7 @@ module CsvOrm
         puts "Parsed row #{$.}" if @logging
       end
       end_time = Time.now
-      puts "Parsed @file.path in #{end_time - start_time} seconds" if @logging
+      puts "Parsed @file.path in #{end_time - begin_time} seconds" if @logging
       true # suppress potentially massive @data_set
     end
 
