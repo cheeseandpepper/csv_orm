@@ -38,13 +38,18 @@ module CsvOrm
       return field.to_s unless @smart
 
       # integers are almost certainly not meant to be time. probably will have to address this at some point.
-      return field if field.is_a?(Numeric)
-      
+      return field if confidence_in_numeric?(field)
+
       date = DateTime.parse(field) rescue nil
       if date
         return date.to_time.to_i
       end
       field.to_s
+    end
+
+    def confidence_in_numeric?(string)
+      return true if string =~ /\A\d+\Z/
+      true if Float(string) rescue false
     end
   end
 end

@@ -26,4 +26,21 @@ describe CsvOrm::Ingestor do
       end
     end
   end
+
+  describe '#confidence_in_numeric?' do
+    let(:numerics)     { ['1', '1.2', '0.09', '999999999'] }
+    let(:non_numerics) { ['1a', 'a1', '1.0.9', '1.a3', '1-2'] }
+
+    it 'returns true for numerics' do
+      numerics.each do |num|
+        expect(subject.confidence_in_numeric?(num)).to eq(true)
+      end
+    end
+
+    it 'returns false for non_numerics' do
+      non_numerics.each do |num|
+        expect(subject.confidence_in_numeric?(num)).to eq(false)
+      end
+    end
+  end
 end
