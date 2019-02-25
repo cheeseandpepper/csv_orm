@@ -27,6 +27,14 @@ describe CsvOrm::Query do
       expression = subject.build_expression('||', {foo: 'bar', baz: 'biz'})
       expect(expression).to eq("row.send(:foo) == 'bar' || row.send(:baz) == 'biz'")
     end
+
+    context 'mixed data types' do
+      it 'can build a complex query' do
+        # 2 Bari, 2 Brit
+        expression = subject.build_expression('&&', {first_name: ['Bari', 'Brit'], admin: true})
+        expect(expression).to eq "[\"Bari\", \"Brit\"].include?(row.send(:first_name)) && row.send(:admin) == 'true'"
+      end
+    end
   end
 
   describe '#where_any' do
@@ -36,11 +44,11 @@ describe CsvOrm::Query do
     end
   end
 
-  describe '#where_all' do
+  describe '#where' do
     it 'returns a dataset meeting the && condition' do
       #510 non admins
-      expect(subject.where_all({admin: false}).size).to eq(510)
-      expect(subject.where_all({admin: false, last_name: 'Bartaloni'}).size).to eq(1)
+      expect(subject.where({admin: false}).size).to eq(510)
+      expect(subject.where({admin: false, last_name: 'Bartaloni'}).size).to eq(1)
     end
   end
 

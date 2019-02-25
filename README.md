@@ -28,21 +28,24 @@ Or install it yourself as:
 Now you can do activerecord like queries on the dataset. Currently it supports 3 methods:
 
 ```ruby
-#where_any({key: 'value', other_key: 'other_value'})
-#where_all({key: 'value', other_key: 'other_value'})
-#aggregate(:field1, :field2)
+#where({key: 'value', other_key: 'other_value'}) (all conditions must be met)
+#where_any({key: 'value', other_key: 'other_value'}) (like an 'or' condition)
+#aggregate(:field1, :field2) (count unique values for each field)
 ```
 
 ```ruby
-  # show users who have have any admin access
-  my_data.where_any({admin: true, super_admin: true})
-
   # show users who are admin and named 'Mike'
-  my_data.where_all({admin: true, first_name: 'Mike'})
+  my_data.where({admin: true, first_name: 'Mike'})
+  
+  # show users who have admin access or have last name N-Z
+  my_data.where_any({admin: true, last_name: /^[n-zN-Z].*/})
 
   # give me a break down of orders by their delivery status for users named 'Mike'
-  my_data.where_all({first_name: 'Mike'}).aggregate(:delivery_status)
-  #=> {delivery_status: {placed: 10, processing: 22, shipped: 43, delivered: 8}}
+  my_data.where({first_name: 'Mike'}).aggregate(:delivery_status, :admin)
+  #=> {
+    delivery_status: {placed: 10, processing: 22, shipped: 43, delivered: 25},
+    admin: { true: 45, false: 55 }
+  }
 ```
 
 Maybe more will come...
