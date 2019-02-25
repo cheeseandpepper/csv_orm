@@ -4,10 +4,15 @@ module CsvOrm
 
     def initialize(data)
       @data = data
+      nil # suppress output
     end
 
     def size
       @data.size
+    end
+
+    def queryable_fields
+      @data&.first&.to_h&.keys
     end
 
     def aggregate(*fields)

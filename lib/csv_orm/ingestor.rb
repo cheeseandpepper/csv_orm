@@ -20,7 +20,7 @@ module CsvOrm
         @data_set << OpenStruct.new(Hash[headers.zip(parsed_row)]) if @headers_defined
         @headers_defined = true
       end
-      @data_set
+      true # suppress potentially massive @data_set
     end
 
     def infer_data_type(field)

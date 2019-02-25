@@ -37,6 +37,13 @@ describe CsvOrm::Query do
     end
   end
 
+  describe '#queryable_fields' do
+    it 'returns the array of fields' do
+      fields = [:id, :first_name, :last_name, :email, :gender, :ip_address, :admin, :subscribed_at, :canceled_at]
+      expect(subject.queryable_fields).to match_array(fields)
+    end
+  end
+
 
   context 'ranges' do
     context 'date range' do
